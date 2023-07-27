@@ -4,6 +4,20 @@ let deck = [];
 const tipos = ['C', 'D', 'H', 'S'];
 const especiales = ['A', 'J', 'Q', 'K'];
 
+let puntosJugador = 0;
+let puntosComputadora = 0;
+
+//Referencias HTML
+
+const btnPedir = document.querySelector('#btnPedir');
+const btnNuevo = document.querySelector('#btnNuevo');
+const btnDetener = document.querySelector('#btnDetener');
+
+const divCartasJugador = document.querySelector('#jugador-cartas');
+const divCartasComputadora = document.querySelector('#computadora-cartas');
+
+const puntosHTML = document.querySelectorAll('small');
+
 const crearDeck = () => {
 
     for( let i =2; i <= 10; i++ ){
@@ -20,7 +34,7 @@ const crearDeck = () => {
 
     //console.log( deck );
     deck = _.shuffle( deck );
-    console.log( deck );
+    //console.log( deck );
     return deck;
 }
 
@@ -38,6 +52,23 @@ const pedirCarta = () => {
     return carta;
 
 }
+
+//turno de la computadora
+const turnoComputadora = ( puntosMinimos ) => {
+    do {
+    const carta = pedirCarta();
+    puntosComputadora = puntosComputadora + valorCarta( carta );
+
+    puntosHTML[1].innerText = puntosComputadora;
+
+    const imgCarta = document.createElement('img');
+    imgCarta.src = `Assets/cartas/${ carta }.png`;
+    imgCarta.classList.add( 'carta' );
+    divCartasComputadora.append( imgCarta );
+    
+    } while( puntosComputadora < puntosMinimos );
+}
+
 
 //pedirCarta();
 
@@ -59,5 +90,29 @@ const valorCarta = ( carta ) => {
 }
 
 // valorCarta('2D');
-const valor = valorCarta( pedirCarta() );
-console.log({ valor });
+//const valor = valorCarta( pedirCarta() );
+//console.log({ valor });
+
+
+//Eventos
+
+btnPedir.addEventListener('click', () => {
+    
+    const carta = pedirCarta();
+    puntosJugador = puntosJugador + valorCarta( carta );
+
+    puntosHTML[0].innerText = puntosJugador;
+
+    const imgCarta = document.createElement('img');
+    imgCarta.src = `Assets/cartas/${ carta }.png`;
+    imgCarta.classList.add( 'carta' );
+    divCartasJugador.append( imgCarta );
+
+    if ( puntosJugador > 21 ){
+        btnPedir.disabled = true;
+    } else if ( puntosJugador === 21 ){
+        btnPedir.disabled = true;
+    }
+
+
+});
